@@ -10,12 +10,13 @@ namespace Psychokinesis
     public class entity
     {
 
-        public int x, y, xVelocity, yVelocity, height, width;
+        public int x, y, xVelocity, yVelocity, height, width, generatedRandom;
         public string name;
         public Rectangle rectangle;
         public Boolean collision;
         public string status;
         public Boolean visible, hit, oldHit;
+        Random r = new Random();
 
         public int throwNum = 0;
 
@@ -155,6 +156,12 @@ namespace Psychokinesis
                 }
             }
 
+        }
+
+        public int makeRandom(int start, int end)
+        {
+            generatedRandom = r.Next(start, end);
+            return generatedRandom;
         }
 
     }

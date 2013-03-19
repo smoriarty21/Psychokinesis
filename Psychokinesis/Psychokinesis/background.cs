@@ -7,13 +7,12 @@ using Microsoft.Xna.Framework;
 
 namespace Psychokinesis
 {
-    public class enviroment:entity
+    class background:entity
     {
-        public Texture2D image;
-        public int id;
 
-        //Update For Platforms to move with Background
-        public void update(String direction, int bkgX, int bkgWidth, int screenWidth, int i)
+        public Texture2D image;
+
+        public void update(String direction)
         {
             if (direction == "right")
             {
@@ -25,22 +24,20 @@ namespace Psychokinesis
                 xVelocity = 4;
             }
 
-            if (bkgX >= 0 || bkgX + bkgWidth <= screenWidth + 5)
+            if (x + xVelocity + width <= 900 || x + xVelocity > 0)
             {
                 xVelocity = 0;
             }
 
             x += xVelocity;
 
-            rectangle = new Rectangle(x + 35 * i, y, width, height);
+            rectangle = new Rectangle(x, y, width, height);
         }
 
-        //Draw Enviroment Sprite 
         public void draw(SpriteBatch sb)
         {
             sb.Draw(image, rectangle, Color.White);
         }
+
     }
-
-
 }

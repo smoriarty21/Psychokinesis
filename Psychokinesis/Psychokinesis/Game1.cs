@@ -26,11 +26,12 @@ namespace Psychokinesis
         KeyboardState previousKeyboard;
 
         //Game World
+        background background = new background();
+
         person mainChar = new person();
         person enemy = new person();
         enviroment floor = new enviroment();
         box box = new box();
-        enviroment background = new enviroment();
         box pointer = new box();
         ui hpBar = new ui();
         ui inventory = new ui();
@@ -61,8 +62,8 @@ namespace Psychokinesis
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            graphics.PreferredBackBufferHeight = 600;
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 500;
+            graphics.PreferredBackBufferWidth = 900;
         }
 
    
@@ -140,7 +141,10 @@ namespace Psychokinesis
             box.name = "box";
 
             //Background Image
-            background.image = Content.Load<Texture2D>("bkg"); 
+            background.image = Content.Load<Texture2D>("bkg");
+            background.x = 0;
+            background.y = 0;
+            background.xVelocity = 0;
 
             //Enemy
             enemy.image = Content.Load<Texture2D>("enemy");
@@ -171,7 +175,7 @@ namespace Psychokinesis
                 plat.Add(new enviroment());
                 plat[i].image = Content.Load<Texture2D>("grassBlock");
                 plat[i].x = 200;
-                plat[i].y = 480;
+                plat[i].y = 375;
                 plat[i].width = 35;
                 plat[i].height = 35;
                 plat[i].rectangle =new Rectangle((plat[i].x + (plat[i].width * i)), plat[i].y, plat[i].width, plat[i].height);
@@ -220,7 +224,6 @@ namespace Psychokinesis
 
         protected override void Update(GameTime gameTime)
         {
-
             //Mouse and Keyboard Input 
             MouseState mState = Mouse.GetState();
             previousMouse = currentMouse;
@@ -238,24 +241,47 @@ namespace Psychokinesis
 
             //Background Image Parameters
             background.height = screenHeight - floor.height;
-            background.width = screenWidth;
-            background.rectangle = new Rectangle(0, 0, background.width, background.height);
+            background.width = 1300;
+            //background.rectangle.X = 0;
+            background.rectangle = new Rectangle(background.x, 0, background.width, background.height);
 
             // Allows the game to exit
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             //Keys For Movement
-            if (Keyboard.GetState().IsKeyDown(Keys.D) && mainChar.rectangle.X + mainChar.width < screenWidth && mainChar.status != "jump" && mainChar.status != "fall")
+            if (Keyboard.GetState().IsKeyDown(Keys.D) && mainChar.status != "jump" && mainChar.status != "fall")
             {
+                if ((mainChar.rectangle.X + mainChar.width) >= screenWidth)
+                {
+                    background.update("right");
+                    mainChar.rectangle.X -= 3;
+
+                    for (int i = 0; i < plat.Count; i++)
+                    {
+                        plat[i].update("right", background.rectangle.X, background.width, screenWidth, i);
+                    }
+                }
+
                 mainChar.rectangle.X += 3;
                 mainChar.image = Content.Load<Texture2D>("right");
                 mainChar.status = "run";
                 mainChar.direction = "right";
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.A) && mainChar.rectangle.X > 0 && mainChar.status != "jump" && mainChar.status != "fall")
+            if (Keyboard.GetState().IsKeyDown(Keys.A) && mainChar.status != "jump" && mainChar.status != "fall")
             {
+                if (mainChar.rectangle.X <= 1)
+                {
+                    background.update("left");
+                    mainChar.rectangle.X += 3;
+
+                    for (int i = 0; i < plat.Count; i++)
+                    {
+                        plat[i].update("left", background.rectangle.X, background.width, screenWidth, i);
+                    }
+                }
+
                 mainChar.rectangle.X -= 3;
                 mainChar.image = Content.Load<Texture2D>("left");
                 mainChar.status = "run";
@@ -507,7 +533,9 @@ namespace Psychokinesis
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(background.image, background.rectangle, Color.White);
+            //Draw Backgrounds
+            //spriteBatch.Draw(background.image, background.rectangle, Color.White);
+            background.draw(spriteBatch);
 
             //Draw Door
             spriteBatch.Draw(door.image, door.rectangle, Color.White);
@@ -537,7 +565,7 @@ namespace Psychokinesis
             //Draw All Platforms From List
             for (int i = 0; i < plat.Count; i++)
             {
-                spriteBatch.Draw(plat[i].image, plat[i].rectangle, Color.White);
+                plat[i].draw(spriteBatch);
             }
 
             //Draw Floor
