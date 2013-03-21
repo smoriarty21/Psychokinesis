@@ -17,8 +17,9 @@ namespace Psychokinesis
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //Onore
-        ono onore = new ono();
+        //Vildar
+        vidar startVidar = new vidar();
+        List<vidar> vi = new List<vidar>();
 
         //Mouse Status
         MouseState currentMouse;
@@ -79,6 +80,15 @@ namespace Psychokinesis
 
         protected override void LoadContent()
         {
+            //Vildar
+            vi.Add(startVidar);
+            vi[0].set(75, 50);
+
+            for (int i = 0; i < vi.Count; i++)
+            {
+                vi[i].image = Content.Load<Texture2D>("black5px");
+            }
+
             //Mouse and Keyboard State
             currentKeyboard = Keyboard.GetState();
             previousMouse = currentMouse;
@@ -557,6 +567,12 @@ namespace Psychokinesis
 
             //Draw Main Char
             spriteBatch.Draw(mainChar.image, mainChar.rectangle, Color.White);
+
+            //Draw Vildar
+            for (int i = 0; i < vi.Count; i++)
+            {
+                vi[i].draw(spriteBatch);
+            }
 
             //Draw Enemy
             if(enemy.visible == true)
