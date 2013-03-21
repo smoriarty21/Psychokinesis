@@ -17,6 +17,9 @@ namespace Psychokinesis
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        //Onore
+        ono onore = new ono();
+
         //Mouse Status
         MouseState currentMouse;
         MouseState previousMouse;
