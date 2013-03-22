@@ -17,10 +17,6 @@ namespace Psychokinesis
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        //Vildar
-        vidar startVidar = new vidar();
-        List<vidar> vi = new List<vidar>();
-
         //Mouse Status
         MouseState currentMouse;
         MouseState previousMouse;
@@ -44,6 +40,18 @@ namespace Psychokinesis
         ui spellMenu = new ui();
         enviroment door = new enviroment();
         enviroment key = new enviroment();
+
+        person spider = new person();
+  
+        //Portal
+        enviroment portal = new enviroment();
+
+        //Spell Menu
+        skillIcon middleSpellMenu = new skillIcon();
+        skillIcon topSpellMenu = new skillIcon();
+        skillIcon leftSpellMenu = new skillIcon();
+        skillIcon rightSpellMenu = new skillIcon();
+        skillIcon bottomSpellMenu = new skillIcon();
 
         //Lists For Enviroment
         List<enviroment> plat = new List<enviroment>();
@@ -80,15 +88,6 @@ namespace Psychokinesis
 
         protected override void LoadContent()
         {
-            //Vildar
-            vi.Add(startVidar);
-            vi[0].set(75, 50);
-
-            for (int i = 0; i < vi.Count; i++)
-            {
-                vi[i].image = Content.Load<Texture2D>("black5px");
-            }
-
             //Mouse and Keyboard State
             currentKeyboard = Keyboard.GetState();
             previousMouse = currentMouse;
@@ -99,8 +98,25 @@ namespace Psychokinesis
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Sprites
+            //Font
             basicFont = Content.Load<SpriteFont>("basicFont");
+
+            //Main Char
+            mainChar.image = Content.Load<Texture2D>("right");
+            mainChar.height = 40;
+            mainChar.width = 40;
+            mainChar.name = "mainChar";
+            mainChar.status = "fall";
+            mainChar.rectangle = new Rectangle(0, 400, mainChar.width, mainChar.height);
+            mainChar.HP = 100;
+            mainChar.skill = "lightning";
+
+            //TEST Spider From Portal
+            spider.height = 50;
+            spider.width = 50;
+            spider.rectangle = new Rectangle(0, 0, spider.width, spider.height);
+            spider.visible = false;
+            spider.image = Content.Load<Texture2D>("blockspider");
 
             //Skills
             lightning.visible = false;
@@ -115,17 +131,72 @@ namespace Psychokinesis
             hpBar.rectangle = new Rectangle(10, 10, hpBar.width, hpBar.height);
 
             //Spell Image Bar
-            spell.image = Content.Load<Texture2D>("mind");
+            spell.image = Content.Load<Texture2D>(mainChar.setSkillImage("light"));
             spell.height = 50;
             spell.width = 50;
             spell.rectangle = new Rectangle(hpBar.rectangle.X, (hpBar.rectangle.Y + hpBar.height + 5), spell.width, spell.height);
 
             //Spell Menu
-            spellMenu.image = Content.Load<Texture2D>("spellmenu");
+            /*spellMenu.image = Content.Load<Texture2D>("spellmenu");
             spellMenu.height = 200;
             spellMenu.width = 200;
             spellMenu.rectangle = new Rectangle(500, 200, spellMenu.width, spellMenu.height);
-            spellMenu.visible = false;
+            spellMenu.visible = false;*/
+
+            //New Spell Menu
+            bottomSpellMenu.image = Content.Load<Texture2D>("mind");
+            bottomSpellMenu.width = 50;
+            bottomSpellMenu.height = 50;
+            bottomSpellMenu.rectangle.X = mainChar.rectangle.X;
+            bottomSpellMenu.rectangle.Y = mainChar.rectangle.Y - bottomSpellMenu.height - 10;
+            bottomSpellMenu.rectangle = new Rectangle(bottomSpellMenu.rectangle.X, bottomSpellMenu.rectangle.Y, bottomSpellMenu.width, bottomSpellMenu.height);
+            bottomSpellMenu.visible = false;
+            bottomSpellMenu.spell = "mind";
+
+            middleSpellMenu.image = Content.Load<Texture2D>("50pxBlackBox");
+            middleSpellMenu.width = 50;
+            middleSpellMenu.height = 50;
+            middleSpellMenu.rectangle.X = bottomSpellMenu.rectangle.X;
+            middleSpellMenu.rectangle.Y = bottomSpellMenu.rectangle.Y - 10 - middleSpellMenu.height;
+            middleSpellMenu.rectangle = new Rectangle(middleSpellMenu.rectangle.X, middleSpellMenu.rectangle.Y, middleSpellMenu.width, middleSpellMenu.height);
+            middleSpellMenu.visible = false;
+
+            topSpellMenu.image = Content.Load<Texture2D>("fireBox");
+            topSpellMenu.height = 50;
+            topSpellMenu.width = 50;
+            topSpellMenu.rectangle.X = bottomSpellMenu.rectangle.X;
+            topSpellMenu.rectangle.Y = middleSpellMenu.rectangle.Y - 10 - topSpellMenu.height;
+            topSpellMenu.rectangle = new Rectangle(topSpellMenu.rectangle.X, topSpellMenu.rectangle.Y, topSpellMenu.width, topSpellMenu.height);
+            topSpellMenu.visible = false;
+            topSpellMenu.spell = "fire";
+
+            leftSpellMenu.image = Content.Load<Texture2D>("ice");
+            leftSpellMenu.height = 50;
+            leftSpellMenu.width = 50;
+            leftSpellMenu.rectangle.X = middleSpellMenu.rectangle.X - 10 - leftSpellMenu.width;
+            leftSpellMenu.rectangle.Y = middleSpellMenu.rectangle.Y;
+            leftSpellMenu.rectangle = new Rectangle(leftSpellMenu.rectangle.X, leftSpellMenu.rectangle.Y, leftSpellMenu.width, leftSpellMenu.height);
+            leftSpellMenu.visible = false;
+            leftSpellMenu.spell = "ice";
+
+            rightSpellMenu.image = Content.Load<Texture2D>("light");
+            rightSpellMenu.height = 50;
+            rightSpellMenu.width = 50;
+            rightSpellMenu.rectangle.X = middleSpellMenu.rectangle.X + 10;
+            rightSpellMenu.rectangle.Y = middleSpellMenu.rectangle.Y;
+            rightSpellMenu.rectangle = new Rectangle(topSpellMenu.rectangle.X, topSpellMenu.rectangle.Y, topSpellMenu.width, topSpellMenu.height);
+            rightSpellMenu.visible = false;
+            rightSpellMenu.spell = "lightning";
+
+            //Portal
+            portal.image = Content.Load<Texture2D>("portal");
+            portal.rectangle.X = 700;
+            portal.rectangle.Y = 170;
+            portal.width = 75;
+            portal.height = 150;
+            portal.rectangle = new Rectangle(portal.rectangle.X, portal.rectangle.Y, portal.width, portal.height);
+            portal.portalTime = 0;
+
 
             //Mouse Pointer
             pointer.image = Content.Load<Texture2D>("pointer");
@@ -133,16 +204,6 @@ namespace Psychokinesis
             pointer.width = 5;
             pointer.name = "pointer";
             pointer.rectangle = new Rectangle(640, 300, pointer.width, pointer.height);
-
-            //Main Char
-            mainChar.image = Content.Load<Texture2D>("right");
-            mainChar.height = 40;
-            mainChar.width = 40;
-            mainChar.name = "mainChar";
-            mainChar.status = "fall";
-            mainChar.rectangle = new Rectangle(0, 400, mainChar.width, mainChar.height);
-            mainChar.HP = 100;
-            mainChar.skill = "lightning";
 
             //Box
             box.image = Content.Load<Texture2D>("box");
@@ -165,7 +226,7 @@ namespace Psychokinesis
             enemy.width = 60;
             enemy.collision = false;
             enemy.name = "enemy";
-            enemy.rectangle = new Rectangle(1200, 400, enemy.width, enemy.height);
+            enemy.rectangle = new Rectangle(800, 400, enemy.width, enemy.height);
             enemy.visible = true;
             enemy.xVelocity = -3;
 
@@ -255,7 +316,6 @@ namespace Psychokinesis
             //Background Image Parameters
             background.height = screenHeight - floor.height;
             background.width = 1300;
-            //background.rectangle.X = 0;
             background.rectangle = new Rectangle(background.x, 0, background.width, background.height);
 
             // Allows the game to exit
@@ -319,10 +379,53 @@ namespace Psychokinesis
             //Spells menu
             if (Keyboard.GetState().IsKeyDown(Keys.Tab) && previousKeyboard.IsKeyDown(Keys.Tab) == false)
             {
-                if (spellMenu.visible == false)
+                /*if (spellMenu.visible == false)
                     spellMenu.visible = true;
                 else if (spellMenu.visible == true)
-                    spellMenu.visible = false;
+                    spellMenu.visible = false;*/
+                if (middleSpellMenu.visible == false)
+                {
+                    //middleSpellMenu.setLocation(mainChar.rectangle.X, mainChar.rectangle.Y);
+                    middleSpellMenu.setVisible(true);
+                    topSpellMenu.setVisible(true);
+                    bottomSpellMenu.setVisible(true);
+                    leftSpellMenu.setVisible(true);
+                    rightSpellMenu.setVisible(true);
+                }
+
+                else if (middleSpellMenu.visible == true)
+                {
+                    middleSpellMenu.setVisible(false);
+                    topSpellMenu.setVisible(false);
+                    bottomSpellMenu.setVisible(false);
+                    leftSpellMenu.setVisible(false);
+                    rightSpellMenu.setVisible(false);
+                }
+            }
+
+            //Change spells: TO DO switch to ricks mouse idea
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && middleSpellMenu.visible == true)
+            {
+                mainChar.skill = rightSpellMenu.spell;
+                spell.image = Content.Load<Texture2D>(mainChar.setSkillImage("light"));
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && middleSpellMenu.visible == true)
+            {
+                mainChar.skill = leftSpellMenu.spell;
+                spell.image = Content.Load<Texture2D>(mainChar.setSkillImage("ice"));
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && middleSpellMenu.visible == true)
+            {
+                mainChar.skill = topSpellMenu.spell;
+                spell.image = Content.Load<Texture2D>(mainChar.setSkillImage("fire"));
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && middleSpellMenu.visible == true)
+            {
+                mainChar.skill = bottomSpellMenu.spell;
+                spell.image = Content.Load<Texture2D>(mainChar.setSkillImage("mind"));
             }
 
 
@@ -331,6 +434,25 @@ namespace Psychokinesis
 
             if (key.status == "up" && !Keyboard.GetState().IsKeyDown(Keys.Space))
                 key.status = "throw";
+
+            //Portal Timing
+            if (portal.visible == true)
+            {
+                portal.portalTime += 1;
+
+                if (portal.portalTime > 100)
+                {
+                    portal.spawnEnemy(spider);
+                }
+
+            }
+            
+            //Spider Fall
+            if (spider.status == "fall")
+            {
+                spider.rectangle.Y += 3;
+                spider.rectangle = new Rectangle(spider.rectangle.X, spider.rectangle.Y, spider.width, spider.height);
+            }
 
             //Stop From going out of screen bounds
 
@@ -516,7 +638,7 @@ namespace Psychokinesis
 
             //Inventory Opened
             if (inventory.visible == true)
-            {
+           { 
                 if (Keyboard.GetState().IsKeyDown(Keys.D1) && previousKeyboard.IsKeyDown(Keys.D1) == false)
                 {
                     if (potion.amount > 0)
@@ -568,12 +690,13 @@ namespace Psychokinesis
             //Draw Main Char
             spriteBatch.Draw(mainChar.image, mainChar.rectangle, Color.White);
 
-            //Draw Vildar
-            for (int i = 0; i < vi.Count; i++)
+            //Draw Portal
+            if (background.rectangle.X + background.width < 1000)
             {
-                vi[i].draw(spriteBatch);
+                portal.draw(spriteBatch);
+                portal.visible = true;
             }
-
+           
             //Draw Enemy
             if(enemy.visible == true)
                 spriteBatch.Draw(enemy.image, enemy.rectangle, Color.White);
@@ -605,10 +728,29 @@ namespace Psychokinesis
             }
 
             //Open Spell Menu
-            if (spellMenu.visible == true)
+            /*if (spellMenu.visible == true)
             {
-                System.Console.Write("open");
                 spriteBatch.Draw(spellMenu.image, spellMenu.rectangle, Color.White);
+            }*/
+            if (middleSpellMenu.visible == true)
+            {
+                middleSpellMenu.setLocation(mainChar.rectangle.X, mainChar.rectangle.Y);
+                topSpellMenu.placeSkill(middleSpellMenu.rectangle.X, middleSpellMenu.rectangle.Y, "top");
+                bottomSpellMenu.placeSkill(middleSpellMenu.rectangle.X, middleSpellMenu.rectangle.Y, "bottom");
+                rightSpellMenu.placeSkill(middleSpellMenu.rectangle.X, middleSpellMenu.rectangle.Y, "right");
+                leftSpellMenu.placeSkill(middleSpellMenu.rectangle.X, middleSpellMenu.rectangle.Y, "left");
+
+                middleSpellMenu.draw(spriteBatch);
+                topSpellMenu.draw(spriteBatch);
+                leftSpellMenu.draw(spriteBatch);
+                rightSpellMenu.draw(spriteBatch);
+                bottomSpellMenu.draw(spriteBatch);
+            }
+
+            //Portal Enemy
+            if (spider.visible == true)
+            {
+                spriteBatch.Draw(spider.image, spider.rectangle, Color.White);
             }
 
             //Draw Lightning

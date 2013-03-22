@@ -12,5 +12,10 @@ namespace Psychokinesis
         public Texture2D image;
         public int amount;
         public Vector2 amountLocation;
+
+        public void draw(SpriteBatch sb)
+        {
+
+        }
     }
 }

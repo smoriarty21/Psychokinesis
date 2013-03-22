@@ -11,6 +11,7 @@ namespace Psychokinesis
     {
         public Texture2D image;
         public int id;
+        public int portalTime;
 
         //Update For Platforms to move with Background
         public void update(String direction, int bkgX, int bkgWidth, int screenWidth, int i)
@@ -31,8 +32,16 @@ namespace Psychokinesis
             }
 
             x += xVelocity;
-
+            
             rectangle = new Rectangle(x + 35 * i, y, width, height);
+        }
+
+        public void spawnEnemy(person enemy)
+        {
+            enemy.visible = true;
+            enemy.status = "fall";
+            enemy.rectangle.X = rectangle.X + (width / 2);
+            enemy.rectangle.Y = rectangle.Y + (height / 2);
         }
 
         //Draw Enviroment Sprite 

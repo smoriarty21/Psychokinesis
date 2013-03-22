@@ -10,6 +10,6 @@ namespace Psychokinesis
     class skills:entity
     {
         public Texture2D image;
-        public Boolean visible; 
+        public Boolean visible;
     }
 }
