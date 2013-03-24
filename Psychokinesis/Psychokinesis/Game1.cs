@@ -57,6 +57,9 @@ namespace Psychokinesis
         List<enviroment> plat = new List<enviroment>();
         List<enviroment> floorBox = new List<enviroment>();
 
+        //Enemy List
+        List<enemy> enemies = new List<enemy>();
+
         //Font
         SpriteFont basicFont;
 
@@ -111,13 +114,6 @@ namespace Psychokinesis
             mainChar.HP = 100;
             mainChar.skill = "lightning";
 
-            //TEST Spider From Portal
-            spider.height = 50;
-            spider.width = 50;
-            spider.rectangle = new Rectangle(0, 0, spider.width, spider.height);
-            spider.visible = false;
-            spider.image = Content.Load<Texture2D>("blockspider");
-
             //Skills
             lightning.visible = false;
             lightning.image = Content.Load<Texture2D>("lbolt");
@@ -135,13 +131,6 @@ namespace Psychokinesis
             spell.height = 50;
             spell.width = 50;
             spell.rectangle = new Rectangle(hpBar.rectangle.X, (hpBar.rectangle.Y + hpBar.height + 5), spell.width, spell.height);
-
-            //Spell Menu
-            /*spellMenu.image = Content.Load<Texture2D>("spellmenu");
-            spellMenu.height = 200;
-            spellMenu.width = 200;
-            spellMenu.rectangle = new Rectangle(500, 200, spellMenu.width, spellMenu.height);
-            spellMenu.visible = false;*/
 
             //New Spell Menu
             bottomSpellMenu.image = Content.Load<Texture2D>("mind");
@@ -219,16 +208,6 @@ namespace Psychokinesis
             background.x = 0;
             background.y = 0;
             background.xVelocity = 0;
-
-            //Enemy
-            enemy.image = Content.Load<Texture2D>("enemy");
-            enemy.height = 75;
-            enemy.width = 60;
-            enemy.collision = false;
-            enemy.name = "enemy";
-            enemy.rectangle = new Rectangle(800, 400, enemy.width, enemy.height);
-            enemy.visible = true;
-            enemy.xVelocity = -3;
 
             //Inventory
             inventory.image = Content.Load<Texture2D>("inventory");
@@ -442,16 +421,9 @@ namespace Psychokinesis
 
                 if (portal.portalTime > 100)
                 {
-                    portal.spawnEnemy(spider);
+                    //Add enemy spawn
                 }
 
-            }
-            
-            //Spider Fall
-            if (spider.status == "fall")
-            {
-                spider.rectangle.Y += 3;
-                spider.rectangle = new Rectangle(spider.rectangle.X, spider.rectangle.Y, spider.width, spider.height);
             }
 
             //Stop From going out of screen bounds
@@ -533,17 +505,6 @@ namespace Psychokinesis
                     throwNum = 0;
                 }
             }
-
-            //Enemy Physics
-            if (enemy.collision == false)
-                enemy.rectangle.Y += 4;
-
-            //Enemy Hits edge of screen(fix later)
-            if (enemy.rectangle.X + enemy.rectangle.Width > screenWidth)
-                enemy.xVelocity = -3;
-
-            enemy.rectangle.X += enemy.xVelocity;
-
 
             //Collision Checks 
             mainChar.Collide(box);
@@ -669,7 +630,6 @@ namespace Psychokinesis
             spriteBatch.Begin();
 
             //Draw Backgrounds
-            //spriteBatch.Draw(background.image, background.rectangle, Color.White);
             background.draw(spriteBatch);
 
             //Draw Door
@@ -727,11 +687,6 @@ namespace Psychokinesis
                 spriteBatch.DrawString(basicFont,"" + potion.amount, potion.amountLocation,Color.White);
             }
 
-            //Open Spell Menu
-            /*if (spellMenu.visible == true)
-            {
-                spriteBatch.Draw(spellMenu.image, spellMenu.rectangle, Color.White);
-            }*/
             if (middleSpellMenu.visible == true)
             {
                 middleSpellMenu.setLocation(mainChar.rectangle.X, mainChar.rectangle.Y);
@@ -745,12 +700,6 @@ namespace Psychokinesis
                 leftSpellMenu.draw(spriteBatch);
                 rightSpellMenu.draw(spriteBatch);
                 bottomSpellMenu.draw(spriteBatch);
-            }
-
-            //Portal Enemy
-            if (spider.visible == true)
-            {
-                spriteBatch.Draw(spider.image, spider.rectangle, Color.White);
             }
 
             //Draw Lightning

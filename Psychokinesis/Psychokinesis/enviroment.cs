@@ -36,14 +36,6 @@ namespace Psychokinesis
             rectangle = new Rectangle(x + 35 * i, y, width, height);
         }
 
-        public void spawnEnemy(person enemy)
-        {
-            enemy.visible = true;
-            enemy.status = "fall";
-            enemy.rectangle.X = rectangle.X + (width / 2);
-            enemy.rectangle.Y = rectangle.Y + (height / 2);
-        }
-
         //Draw Enviroment Sprite 
         public void draw(SpriteBatch sb)
         {
